@@ -1,5 +1,7 @@
 package lesson7;
 
+import lesson8.client.MyClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -134,7 +136,7 @@ public class EchoClient extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new EchoClient();
+                new MyClient();
             }
         });
     }

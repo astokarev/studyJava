@@ -1,6 +1,5 @@
 package lesson8.client;
 
-
 import com.google.gson.Gson;
 import lesson8.server.AuthMessage;
 import lesson8.server.Message;
@@ -16,7 +15,7 @@ public class SocketServerService implements ServerService {
     private Socket socket;
     private DataOutputStream dataOutputStream;
     private DataInputStream dataInputStream;
-    private boolean isConnected = false;
+    boolean isConnected = false;
 
     public boolean isConnected() {
         return isConnected;
@@ -37,12 +36,14 @@ public class SocketServerService implements ServerService {
         AuthMessage authMessage = new AuthMessage();
         authMessage.setLogin(login);
         authMessage.setPassword(password);
-        dataOutputStream.writeUTF("/auth " + login + " " + "pass");
+        dataOutputStream.writeUTF(new Gson().toJson(authMessage));
+
         authMessage = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
         if (authMessage.isAuthenticated()) {
             isConnected = true;
-        }
-        return authMessage.getNick();
+            return authMessage.getNick();
+        } else return " ";
+
     }
 
     @Override

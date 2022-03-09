@@ -1,6 +1,5 @@
 package lesson8.server;
 
-
 public class Message {
     private String nick;
     private String message;

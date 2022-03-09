@@ -1,17 +1,11 @@
 package lesson8.client;
 
-import lesson8.client.ServerService;
-import lesson8.client.SocketServerService;
 import lesson8.server.Message;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.net.Socket;
-import java.util.Arrays;
 
 public class MyClient extends JFrame {
 
@@ -30,7 +24,6 @@ public class MyClient extends JFrame {
 
         JTextArea mainChat = new JTextArea();
         mainChat.setSize(400, 250);
-
         initLoginPanel(mainChat);
 
         JTextField myMessage = new JTextField();
@@ -64,8 +57,10 @@ public class MyClient extends JFrame {
     private void initLoginPanel(JTextArea mainChat) {
         JTextField login = new JTextField();
         login.setToolTipText("Логин");
+        login.setVisible(!serverService.isConnected());
         JPasswordField password = new JPasswordField();
         password.setToolTipText("Пароль");
+        password.setVisible(!serverService.isConnected());
         JButton authButton = new JButton("Авторизоваться");
 
         JLabel authLabel = new JLabel("Offline");
@@ -76,14 +71,15 @@ public class MyClient extends JFrame {
                 try {
                     String nick = serverService.authorization(lgn, psw);
                     authLabel.setText("Online, nick "+nick);
+                    new Thread(() -> {
+                        while (true) {
+                            printToUI(mainChat, serverService.readMessages());
+                        }
+                    }).start();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                new Thread(() -> {
-                    while (true) {
-                        printToUI(mainChat, serverService.readMessages());
-                    }
-                }).start();
+
             }
         });
 

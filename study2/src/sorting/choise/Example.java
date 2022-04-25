@@ -1,7 +1,8 @@
 package sorting.choise;
 
+import static sorting.choise.MergeSort.mergeSort;
 import static sorting.choise.MySorts.*;
-import static sorting.choise.QuickSort.quickSort;
+
 
 public class Example {
 
@@ -11,7 +12,8 @@ public class Example {
         long time = System.currentTimeMillis();
         //insertionSort(a);
         //shellSort(a);
-        quickSort(a, 0, a.length-1);
+        //quickSort(a, 0, a.length-1);
+        mergeSort(a);
         assert isSorted(a);
         System.out.println(System.currentTimeMillis() - time);
         show(a);

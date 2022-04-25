@@ -10,7 +10,7 @@ public class MySorts {
             arr[i] = rnd.nextInt(100000);
         }
     }
-
+    //(N^2-N)/2
     public static void selectionSort(Comparable[] a) {
         for (int i = 0; i < a.length; i++) {
             int min = i;

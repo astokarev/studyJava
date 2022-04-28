@@ -1,5 +1,7 @@
 package Trees.ex1;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Graph {
@@ -8,6 +10,7 @@ public class Graph {
     private int adjMat[][]; // матрица смежности
     private int nVerts; // текущее количество вершин
     private Stack<Integer> stack;
+    private Queue<Integer> queue;
 
     public Graph() {
         vertexArray = new Vertex[MAX_VERTS];
@@ -19,6 +22,7 @@ public class Graph {
             }
         }
         stack = new Stack<>();
+        queue = new PriorityQueue<>();
     }
 
     public void addVertex(char lab) {
@@ -27,6 +31,7 @@ public class Graph {
 
     public void addEdge(int start, int end) {
         adjMat[start][end] = 1;
+        vertexArray[start].addChild(vertexArray[end]);
         adjMat[end][start] = 1;
     }
 
@@ -34,7 +39,7 @@ public class Graph {
         System.out.println(vertexArray[v].getLabel());
     }
 
-    public void passInDeep(int index) {
+    public void passInDeep() {
         vertexArray[0].setWasVisited(true);
         displayVertex(0);
         stack.push(0);
@@ -56,12 +61,49 @@ public class Graph {
 
     }
 
+    public void bfc() { // обход в ширину
+        vertexArray[0].setWasVisited(true);
+        displayVertex(0);
+        queue.add(0);
+        int v2;
+
+        while (!queue.isEmpty()) {
+            int v = queue.remove();
+
+            while ((v2 = getAdjVertex(v)) != -1) {// цикл будет работать, пока все смежные вершины не будут найденны, и не будут добавлены в очередь
+                vertexArray[v2].wasVisited = true;
+                displayVertex(v2);
+                queue.add(v2);
+            }
+        }
+
+        for (int j = 0; j < nVerts; j++) {  // сброс флагов
+            vertexArray[j].wasVisited = false;
+        }
+
+    }
+
     private int getAdjVertex(int v) {
         for (int j = 0; j < nVerts; j++) {
-            if (adjMat[v][j] == 1 && vertexArray[j].wasVisited == false) {
+            if (adjMat[v][j] == 1 && !vertexArray[j].wasVisited) {
                 return j; //возвращает первую найденную вершину
             }
         }
         return -1;
     }
+
+    public Vertex getVertex(int i) {
+        return vertexArray[i];
+    }
+
+    enum States {Unvisited, Visited, Visiting}
+
+    boolean search(Vertex start, Vertex end) {
+
+        if (start == end) return true;
+        return start.isPathTo(end);
+    }
+
+
+
 }

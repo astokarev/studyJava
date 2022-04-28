@@ -24,33 +24,33 @@ public class Tree {
         return currentNode;
     }
 
-    public void insertNode(int value) { // метод вставки нового элемента
-        Node newNode = new Node(); // создание нового узла
-        newNode.setValue(value); // вставка данных
-        if (rootNode == null) { // если корневой узел не существует
-            rootNode = newNode;// то новый элемент и есть корневой узел
+    public void insertNode(int value) {
+        Node newNode = new Node();
+        newNode.setValue(value);
+        if (rootNode == null) {
+            rootNode = newNode;
         }
         else { // корневой узел занят
-            Node currentNode = rootNode; // начинаем с корневого узла
+            Node currentNode = rootNode;
             Node parentNode;
-            while (true) // мы имеем внутренний выход из цикла
+            while (true)
             {
                 parentNode = currentNode;
-                if(value == currentNode.getValue()) {   // если такой элемент в дереве уже есть, не сохраняем его
-                    return;    // просто выходим из метода
+                if(value == currentNode.getValue()) {
+                    return;
                 }
                 else  if (value < currentNode.getValue()) {
                     currentNode = currentNode.getLeftChild();
-                    if (currentNode == null){ // если был достигнут конец цепочки,
-                        parentNode.setLeftChild(newNode); //  то вставить слева и выйти из методы
+                    if (currentNode == null){
+                        parentNode.setLeftChild(newNode);
                         return;
                     }
                 }
-                else { // Или направо?
+                else {
                     currentNode = currentNode.getRightChild();
-                    if (currentNode == null) { // если был достигнут конец цепочки,
-                        parentNode.setRightChild(newNode);  //то вставить справа
-                        return; // и выйти
+                    if (currentNode == null) {
+                        parentNode.setRightChild(newNode);
+                        return;
                     }
                 }
             }
@@ -171,5 +171,21 @@ public class Tree {
                 globalStack.push(localStack.pop());
         }
         System.out.println(separator);
+    }
+
+    Node createMinBST(int array[]){
+        return createMinBST(array, 0 , array.length-1);
+    }
+
+    Node createMinBST(int arr[], int start, int end){
+        if(end<start){
+            return null;
+        }
+        int mid = (start+end)/2;
+        Node n = new Node();
+        insertNode(arr[mid]);
+        n.setLeftChild(createMinBST(arr, start, mid-1));
+        n.setRightChild(createMinBST(arr, mid+1, end));
+
     }
 }

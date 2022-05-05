@@ -1,5 +1,8 @@
 package Trees;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 public class App {
     public static void main(String[] args) {
         Tree tree = new Tree();
@@ -23,7 +26,15 @@ public class App {
         tree.printTree();
 
         // находим узел по значению и выводим его в консоли
-        Node foundNode = tree.findNodeByValue(7);
-        foundNode.printNode();
+        TreeNode foundTreeNode = tree.findNodeByValue(7);
+        foundTreeNode.printNode();
+        ArrayList<LinkedList<TreeNode>> levels = tree.createLevelList(tree.rootTreeNode);
+        for (LinkedList<TreeNode> level : levels) {
+            System.out.println();
+            for(TreeNode node : level) {
+                System.out.print(node.getValue()+ " ");
+            }
+        }
+
     }
 }

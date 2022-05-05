@@ -1,55 +1,57 @@
 package Trees;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class Tree {
-    private Node rootNode; // корневой узел
+    public TreeNode rootTreeNode; // корневой узел
 
     public Tree() { // Пустое дерево
-        rootNode = null;
+        rootTreeNode = null;
     }
 
-    public Node findNodeByValue(int value) {
-        Node currentNode = rootNode;
-        while (currentNode.getValue() != value) { // поиск покуда не будет найден элемент или не будут перебраны все
-            if (value < currentNode.getValue()) {
-                currentNode = currentNode.getLeftChild();
+    public TreeNode findNodeByValue(int value) {
+        TreeNode currentTreeNode = rootTreeNode;
+        while (currentTreeNode.getValue() != value) { // поиск покуда не будет найден элемент или не будут перебраны все
+            if (value < currentTreeNode.getValue()) {
+                currentTreeNode = currentTreeNode.getLeftChild();
             } else {
-                currentNode = currentNode.getRightChild();
+                currentTreeNode = currentTreeNode.getRightChild();
             }
-            if (currentNode == null) {
+            if (currentTreeNode == null) {
                 return null;
             }
         }
-        return currentNode;
+        return currentTreeNode;
     }
 
     public void insertNode(int value) {
-        Node newNode = new Node();
-        newNode.setValue(value);
-        if (rootNode == null) {
-            rootNode = newNode;
+        TreeNode newTreeNode = new TreeNode();
+        newTreeNode.setValue(value);
+        if (rootTreeNode == null) {
+            rootTreeNode = newTreeNode;
         }
         else { // корневой узел занят
-            Node currentNode = rootNode;
-            Node parentNode;
+            TreeNode currentTreeNode = rootTreeNode;
+            TreeNode parentTreeNode;
             while (true)
             {
-                parentNode = currentNode;
-                if(value == currentNode.getValue()) {
+                parentTreeNode = currentTreeNode;
+                if(value == currentTreeNode.getValue()) {
                     return;
                 }
-                else  if (value < currentNode.getValue()) {
-                    currentNode = currentNode.getLeftChild();
-                    if (currentNode == null){
-                        parentNode.setLeftChild(newNode);
+                else  if (value < currentTreeNode.getValue()) {
+                    currentTreeNode = currentTreeNode.getLeftChild();
+                    if (currentTreeNode == null){
+                        parentTreeNode.setLeftChild(newTreeNode);
                         return;
                     }
                 }
                 else {
-                    currentNode = currentNode.getRightChild();
-                    if (currentNode == null) {
-                        parentNode.setRightChild(newNode);
+                    currentTreeNode = currentTreeNode.getRightChild();
+                    if (currentTreeNode == null) {
+                        parentTreeNode.setRightChild(newTreeNode);
                         return;
                     }
                 }
@@ -59,55 +61,55 @@ public class Tree {
 
     public boolean deleteNode(int value) // Удаление узла с заданным ключом
     {
-        Node currentNode = rootNode;
-        Node parentNode = rootNode;
+        TreeNode currentTreeNode = rootTreeNode;
+        TreeNode parentTreeNode = rootTreeNode;
         boolean isLeftChild = true;
-        while (currentNode.getValue() != value) { // начинаем поиск узла
-            parentNode = currentNode;
-            if (value < currentNode.getValue()) { // Определяем, нужно ли движение влево?
+        while (currentTreeNode.getValue() != value) { // начинаем поиск узла
+            parentTreeNode = currentTreeNode;
+            if (value < currentTreeNode.getValue()) { // Определяем, нужно ли движение влево?
                 isLeftChild = true;
-                currentNode = currentNode.getLeftChild();
+                currentTreeNode = currentTreeNode.getLeftChild();
             }
             else { // или движение вправо?
                 isLeftChild = false;
-                currentNode = currentNode.getRightChild();
+                currentTreeNode = currentTreeNode.getRightChild();
             }
-            if (currentNode == null)
+            if (currentTreeNode == null)
                 return false; // yзел не найден
         }
 
-        if (currentNode.getLeftChild() == null && currentNode.getRightChild() == null) { // узел просто удаляется, если не имеет потомков
-            if (currentNode == rootNode) // если узел - корень, то дерево очищается
-                rootNode = null;
+        if (currentTreeNode.getLeftChild() == null && currentTreeNode.getRightChild() == null) { // узел просто удаляется, если не имеет потомков
+            if (currentTreeNode == rootTreeNode) // если узел - корень, то дерево очищается
+                rootTreeNode = null;
             else if (isLeftChild)
-                parentNode.setLeftChild(null); // если нет - узел отсоединяется, от родителя
+                parentTreeNode.setLeftChild(null); // если нет - узел отсоединяется, от родителя
             else
-                parentNode.setRightChild(null);
+                parentTreeNode.setRightChild(null);
         }
-        else if (currentNode.getRightChild() == null) { // узел заменяется левым поддеревом, если правого потомка нет
-            if (currentNode == rootNode)
-                rootNode = currentNode.getLeftChild();
+        else if (currentTreeNode.getRightChild() == null) { // узел заменяется левым поддеревом, если правого потомка нет
+            if (currentTreeNode == rootTreeNode)
+                rootTreeNode = currentTreeNode.getLeftChild();
             else if (isLeftChild)
-                parentNode.setLeftChild(currentNode.getLeftChild());
+                parentTreeNode.setLeftChild(currentTreeNode.getLeftChild());
             else
-                parentNode.setRightChild(currentNode.getLeftChild());
+                parentTreeNode.setRightChild(currentTreeNode.getLeftChild());
         }
-        else if (currentNode.getLeftChild() == null) { // узел заменяется правым поддеревом, если левого потомка нет
-            if (currentNode == rootNode)
-                rootNode = currentNode.getRightChild();
+        else if (currentTreeNode.getLeftChild() == null) { // узел заменяется правым поддеревом, если левого потомка нет
+            if (currentTreeNode == rootTreeNode)
+                rootTreeNode = currentTreeNode.getRightChild();
             else if (isLeftChild)
-                parentNode.setLeftChild(currentNode.getRightChild());
+                parentTreeNode.setLeftChild(currentTreeNode.getRightChild());
             else
-                parentNode.setRightChild(currentNode.getRightChild());
+                parentTreeNode.setRightChild(currentTreeNode.getRightChild());
         }
         else { // если есть два потомка, узел заменяется преемником
-            Node heir = receiveHeir(currentNode);// поиск преемника для удаляемого узла
-            if (currentNode == rootNode)
-                rootNode = heir;
+            TreeNode heir = receiveHeir(currentTreeNode);// поиск преемника для удаляемого узла
+            if (currentTreeNode == rootTreeNode)
+                rootTreeNode = heir;
             else if (isLeftChild)
-                parentNode.setLeftChild(heir);
+                parentTreeNode.setLeftChild(heir);
             else
-                parentNode.setRightChild(heir);
+                parentTreeNode.setRightChild(heir);
         }
         return true; // элемент успешно удалён
     }
@@ -115,28 +117,28 @@ public class Tree {
     // метод возвращает узел со следующим значением после передаваемого аргументом.
     // для этого он сначала переходим к правому потомку, а затем
     // отслеживаем цепочку левых потомков этого узла.
-    private Node receiveHeir(Node node) {
-        Node parentNode = node;
-        Node heirNode = node;
-        Node currentNode = node.getRightChild(); // Переход к правому потомку
-        while (currentNode != null) // Пока остаются левые потомки
+    private TreeNode receiveHeir(TreeNode treeNode) {
+        TreeNode parentTreeNode = treeNode;
+        TreeNode heirTreeNode = treeNode;
+        TreeNode currentTreeNode = treeNode.getRightChild(); // Переход к правому потомку
+        while (currentTreeNode != null) // Пока остаются левые потомки
         {
-            parentNode = heirNode;// потомка задаём как текущий узел
-            heirNode = currentNode;
-            currentNode = currentNode.getLeftChild(); // переход к левому потомку
+            parentTreeNode = heirTreeNode;// потомка задаём как текущий узел
+            heirTreeNode = currentTreeNode;
+            currentTreeNode = currentTreeNode.getLeftChild(); // переход к левому потомку
         }
         // Если преемник не является
-        if (heirNode != node.getRightChild()) // правым потомком,
+        if (heirTreeNode != treeNode.getRightChild()) // правым потомком,
         { // создать связи между узлами
-            parentNode.setLeftChild(heirNode.getRightChild());
-            heirNode.setRightChild(node.getRightChild());
+            parentTreeNode.setLeftChild(heirTreeNode.getRightChild());
+            heirTreeNode.setRightChild(treeNode.getRightChild());
         }
-        return heirNode;// возвращаем приемника
+        return heirTreeNode;// возвращаем приемника
     }
 
     public void printTree() {
         Stack globalStack = new Stack(); // общий стек для значений дерева
-        globalStack.push(rootNode);
+        globalStack.push(rootTreeNode);
         int gaps = 32; // начальное значение расстояния между элементами
         boolean isRowEmpty = false;
         String separator = "-----------------------------------------------------------------";
@@ -148,7 +150,7 @@ public class Tree {
             for (int j = 0; j < gaps; j++)
                 System.out.print(' ');
             while (globalStack.isEmpty() == false) {
-                Node temp = (Node) globalStack.pop();
+                TreeNode temp = (TreeNode) globalStack.pop();
                 if (temp != null) {
                     System.out.print(temp.getValue());
                     localStack.push(temp.getLeftChild());
@@ -173,19 +175,58 @@ public class Tree {
         System.out.println(separator);
     }
 
-    Node createMinBST(int array[]){
+    TreeNode createMinBST(int array[]){
         return createMinBST(array, 0 , array.length-1);
     }
 
-    Node createMinBST(int arr[], int start, int end){
+    TreeNode createMinBST(int arr[], int start, int end){
         if(end<start){
             return null;
         }
         int mid = (start+end)/2;
-        Node n = new Node();
+        TreeNode n = new TreeNode();
+        rootTreeNode = n;
         insertNode(arr[mid]);
         n.setLeftChild(createMinBST(arr, start, mid-1));
         n.setRightChild(createMinBST(arr, mid+1, end));
+        return n;
+    }
 
+    ArrayList<LinkedList<TreeNode>> createLevelList(TreeNode root){
+        ArrayList<LinkedList<TreeNode>> result = new ArrayList<LinkedList<TreeNode>>();
+
+        LinkedList<TreeNode> current = new LinkedList<TreeNode>();
+        if (root != null){
+            current.add(root);
+        }
+
+        while (current.size()>0){
+            result.add(current);
+            LinkedList<TreeNode> parents = current;
+            current = new LinkedList<TreeNode>();
+            for (TreeNode parent: parents){
+                if(parent.getLeftChild() != null){
+                    current.add(parent.getLeftChild());
+                }
+                if(parent.getRightChild() != null){
+                    current.add(parent.getRightChild());
+                }
+            }
+        }
+        return result;
+    }
+
+    void createLevelList2(TreeNode root, ArrayList<LinkedList<TreeNode>> lists, int level){
+        if(root == null) return;
+
+        LinkedList<TreeNode> list = null;
+
+        if(lists.size() == level){
+            list = new LinkedList<TreeNode>();
+            lists.add(list);
+        } else {
+            list = lists.get(level);
+        }
+        list.add(root);
     }
 }
